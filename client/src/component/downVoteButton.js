@@ -3,14 +3,14 @@ import { Button, Icon, Label, Popup } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 
 function DownvoteButton({ likeCount, postId, likes, userName }) {
-  const [liked, setLiked] = useState(false);
+  const [downVote, setdownVote] = useState(false);
 
   const devotePostHandler=()=>{
-    console.log("Like");
+    setdownVote(!downVote);
   }
 
   const devoteButton = userName ? (
-    liked ? (
+    downVote ? (
       <Button color="red">
         <Icon name="arrow alternate circle down" />
       </Button>

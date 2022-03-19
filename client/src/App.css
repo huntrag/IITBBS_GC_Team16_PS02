@@ -10,12 +10,20 @@
   margin: auto;
 }
 
-.ui.grid > .row > .column > img, .ui.grid > .row > img {
+.ui.grid > .row > .column > img,
+.ui.grid > .row > img {
   max-width: 145%;
   height: 200px;
 }
 
-.ui.red.button:focus,
-.ui.red.buttons .button:focus {
-  background-color: #00b5ad;
+.ui[class*="three column"].grid > .column:not(.row),
+.ui[class*="three column"].grid > .row > .column {
+  width: 37.33333333%;
+}
+
+.ui.mini.message {
+  font-size: 0.78571429em;
+}
+.ui.message {
+  padding: 0.5em 1.5em;
 }

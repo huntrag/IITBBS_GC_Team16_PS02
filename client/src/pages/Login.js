@@ -1,17 +1,11 @@
-import React, { useContext, useReducer, useState } from "react";
-import { Button, Form } from "semantic-ui-react";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/auth";
+import React from "react";
 
 function Login() {
-  const [error, setError] = useState("");
-  const authCtx = useContext(AuthContext);
-  const navigate = useNavigate();
-
-
+  const googleURL = `${process.env.REACT_APP_BACKEND_HOST}/auth/google`;
   return (
     <div>
-     Login
+      Unauthorized {"    "}
+      <a href={googleURL}>Login</a>
     </div>
   );
 }

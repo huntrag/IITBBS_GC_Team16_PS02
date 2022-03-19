@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Grid, Image, Transition } from "semantic-ui-react";
 import PostCard from "../component/PostCard";
 import { AuthContext } from "../context/auth";
@@ -7,6 +7,7 @@ import axiosInstance from "../util/axiosInstance";
 
 function Home() {
   const authCtx = useContext(AuthContext);
+  const [posts, setPosts] = useState([]);
   const { user } = authCtx;
 
   useEffect(() => {
@@ -20,22 +21,34 @@ function Home() {
     getUser();
   }, [authCtx]);
 
-  const posts = [
-    {
-      id: "1",
-      body: "Dummy Post",
-      createdAt: new Date(),
-      upVote: [{ userName: "dsgsdg" }],
-      downVote: [{ userName: "dsgsdg" }],
-      userName: "fdsfds",
-      comments: "fdsfds",
-    },
-  ];
+  useEffect(() => {
+    const getAllPosts = async () => {
+      const response = await axiosInstance.get(
+        `${process.env.REACT_APP_BACKEND_HOST}/post`
+      );
+      setPosts(response.data);
+      // if (!response.data.error) authCtx.login({ token: response.data.token });
+      // else authCtx.logout();
+    };
+    getAllPosts();
+  });
+
+  const deletePostHandler = (postId) => {
+    const filterPost = posts.filter(
+      (post) => post._id.toString() !== postId.toString()
+    );
+    setPosts(filterPost);
+  };
+
+  console.log(user);
 
   return (
     <Grid columns={3}>
       <Grid.Row className="page-title">
         <h1>Recent Posts</h1>
+        {!user && (
+            <div class="ui yellow mini message">You have to login for accessing posts</div>
+        )}
       </Grid.Row>
       <Grid.Row>
         {user && (
@@ -47,8 +60,12 @@ function Home() {
           {" "}
           {posts &&
             posts.map((post) => (
-              <Grid.Column key={post.id} style={{ marginBottom: "20px" }}>
-                <PostCard post={post} key={post.id} />
+              <Grid.Column key={post._id} style={{ marginBottom: "20px" }}>
+                <PostCard
+                  post={post}
+                  key={post._id}
+                  deletePostHandler={deletePostHandler}
+                />
               </Grid.Column>
             ))}
         </Transition.Group>

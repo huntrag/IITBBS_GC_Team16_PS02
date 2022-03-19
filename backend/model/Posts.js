@@ -10,15 +10,19 @@ const post_schema=new mongoose.Schema({
                 throw new Error("Abusive Language detected");
         }
     },
-    upvotes:{
+    upVotes:{
         type:Array,
         default:[]
     },
-    user_id:{
+    downVotes:{
+        type:Array,
+        default:[]
+    },
+    userId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true
     },
-    blacklist:{
+    blackList:{
         type:Boolean,
         default:false
     }

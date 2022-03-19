@@ -13,7 +13,7 @@
 .ui.grid > .row > .column > img,
 .ui.grid > .row > img {
   max-width: 145%;
-  height: 200px;
+  height: 150px;
 }
 
 .ui[class*="three column"].grid > .column:not(.row),

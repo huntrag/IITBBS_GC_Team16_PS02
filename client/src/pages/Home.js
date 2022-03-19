@@ -16,7 +16,7 @@ function Home() {
         `${process.env.REACT_APP_BACKEND_HOST}/login/user`
       );
       if (!response.data.error) authCtx.login({ token: response.data.token });
-      else if(authCtx.user) authCtx.logout();
+      else if (authCtx.user) authCtx.logout();
     };
     getUser();
   }, [authCtx]);
@@ -44,7 +44,9 @@ function Home() {
       <Grid.Row className="page-title">
         <h1>Recent Posts</h1>
         {!user && (
-            <div className="ui yellow mini message">You have to login for accessing posts</div>
+          <div className="ui yellow mini message">
+            You have to login for accessing posts
+          </div>
         )}
       </Grid.Row>
       <Grid.Row>
@@ -53,19 +55,23 @@ function Home() {
             <AddPost />
           </Grid.Column>
         )}
-        <Transition.Group>
-          {" "}
-          {posts &&
-            posts.map((post) => (
-              <Grid.Column key={post._id} style={{ marginBottom: "20px" }}>
-                <PostCard
-                  post={post}
-                  key={post._id}
-                  deletePostHandler={deletePostHandler}
-                />
-              </Grid.Column>
-            ))}
-        </Transition.Group>
+        {posts && posts.length === 0 ? (
+          <p>No post to show</p>
+        ) : (
+          <Transition.Group>
+            {" "}
+            {posts &&
+              posts.map((post) => (
+                <Grid.Column key={post._id} style={{ marginBottom: "20px" }}>
+                  <PostCard
+                    post={post}
+                    key={post._id}
+                    deletePostHandler={deletePostHandler}
+                  />
+                </Grid.Column>
+              ))}
+          </Transition.Group>
+        )}
       </Grid.Row>
     </Grid>
   );

@@ -9,6 +9,7 @@ import {
   Image,
   Popup,
 } from "semantic-ui-react";
+import {  useNavigate } from "react-router";
 import moment from "moment";
 import LikeButton from "../component/LikeButton";
 import { AuthContext } from "../context/auth";
@@ -20,6 +21,7 @@ import DownvoteButton from "../component/downVoteButton";
 import axiosInstance from "../util/axiosInstance";
 
 function PostDetails() {
+  const navigate=useNavigate();
   const { postId } = useParams();
 
   const { user } = useContext(AuthContext);
@@ -65,7 +67,8 @@ function PostDetails() {
   };
 
   const deletePostHandler=()=>{
-    console.log("Post deleted")
+    navigate("/", { replace: true });
+    console.log("Post deleted");
   }
 
   const submitCommentHandler=()=>{

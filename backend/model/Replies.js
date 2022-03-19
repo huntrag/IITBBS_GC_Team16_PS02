@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose=require("mongoose");
 
 const r_schema = new mongoose.Schema(
   {
@@ -6,19 +6,27 @@ const r_schema = new mongoose.Schema(
       type: String,
       required: "true",
       validate(data) {
-        if (data.match(/(?i)(fuck|sex|porn|dick|cock|cunt|pussy|asshole)/))
+        if (data.match(/(fuck|sex|porn|dick|cock|cunt|pussy|asshole)/i))
           throw new Error("Abusive Language detected");
       },
     },
-    upVotes: {
+    upvotes: {
       type: Array,
       default: [],
     },
-    postId: {
+    postid: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
-    downVotes: {
+    userid:{
+      type:mongoose.Schema.Types.ObjectId,
+      required:true
+  },
+    username:{
+      type:String,
+      required:true
+    },
+    downvotes: {
       type: Array,
       default: [],
     },
@@ -32,4 +40,4 @@ const r_schema = new mongoose.Schema(
 
 const reply = mongoose.model("reply", r_schema);
 
-export { reply };
+module.exports=reply;

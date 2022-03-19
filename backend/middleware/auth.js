@@ -1,7 +1,11 @@
 
 module.exports = {
     ensureAuth: (req, res, next) => {
-      if (req.isAuthenticated()) return next();
+      if (req.isAuthenticated()) 
+      {
+        if(req.user._id==req.body.userid && req.user.name==req.body.username)
+        return next();
+      }
       else res.redirect("/");
     },
     ensureGuest: (req, res, next) => {

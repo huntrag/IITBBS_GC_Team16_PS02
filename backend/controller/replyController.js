@@ -1,50 +1,50 @@
-const post = require("../model/Posts");
+const reply = require("../model/Replies");
 const mongoose = require("mongoose");
 
-const getAllPost = async (req, res) => {
+const getreplies = async (req, res) => {
   try {
-    let sortby = { updatedAt: -1 };
+    let sortby = { upvotes: -1 };
     let showBlacklist = { blacklist: "false" };
     if (req.session.user) showBlacklist = {};
-    if (req.query.sortby == "upvotes") sortby = { upvotes: -1 };
-    const posts = await post.find(showBlacklist).sort(sortby);
-    res.status(200).json(posts);
+    const replies = await reply.find(showBlacklist).sort(sortby);
+    res.status(200).json(replies);
   } catch (err) {
     res.status(500).send();
   }
 };
 
-const createPost = async (req, res) => {
+const createreply = async (req, res) => {
   try {
-    const newPost = new post({
+    const newreply = new reply({
       username: req.user.name,
       content: req.body.content,
       userid: mongoose.Types.ObjectId(req.user._id),
+      postid: mongoose.Types.ObjectId(req.body.reply_id)
     });
-    await newPost.save();
+    await newreply.save();
     res.status(201).send();
   } catch (err) {
     res.status(500).send();
   }
 };
 
-const updatePost = async (req, res) => {
+const updatereply = async (req, res) => {
   try {
     const change = { blacklist: true };
     if (!req.body.blacklist) change.blacklist = false;
-    await post.findByIdAndUpdate(req.body.post_id, change);
+    await reply.findByIdAndUpdate(req.body.reply_id, change);
     res.status(200).send();
   } catch (e) {
     res.status(400).send();
   }
 };
 
-const deletePost = async (req, res) => {
+const deletereply = async (req, res) => {
   try {
-    await post.findByIdAndDelete(req.body.post_id);
+    await reply.findByIdAndDelete(req.body.reply_id);
     res.status(200).send();
   } catch (err) {
     res.status(400).send();
   }
 };
-module.exports = { getAllPost, createPost, updatePost, deletePost };
+module.exports = { getreplies, createreply, updatereply, deletereply };

@@ -5,16 +5,16 @@ const mongoose = require("mongoose");
 const {
   getAllPost,
   createPost,
-  updatePost,
+  toggleBlackListPost,
   deletePost,
 } = require("../controller/postController");
 const { ensureAuth } = require("../middleware/auth");
 
-router.get("/",ensureAuth ,getAllPost);
+router.get("/", getAllPost);
 
-router.post("/", createPost);
+router.post("/", ensureAuth, createPost);
 
-router.patch("/", updatePost);
+router.patch("/blackList", ensureAuth, toggleBlackListPost);
 
-router.delete("/", deletePost);
+router.delete("/:postId", ensureAuth, deletePost);
 module.exports = router;

@@ -8,32 +8,36 @@ import LikeButton from "./LikeButton";
 import DeleteButton from "./DeleteButton";
 import DownvoteButton from "./downVoteButton";
 
-function PostCard({ post }) {
-  const { body, createdAt, upVote, downVote, id, userName, comments } = post;
-  const upVoteCount = upVote.length;
-  const commentCount = comments.length;
+function PostCard({ post ,deletePostHandler}) {
+  const {
+    content: body,
+    createdAt,
+    upvotes,
+    downvotes,
+    _id: id,
+    username: userName,
+    repiles,
+    userid,
+  } = post;
+  const upvotesCount = upvotes.length;
+  const commentCount = repiles.length;
+  const { image: userImage, mailId: userEmailId } = userid;
   const { user } = useContext(AuthContext);
 
-  const deletePostHandler = () => {};
   return (
     <Card fluid>
       <Card.Content>
         <Popup
-          content={user && userName === user.name && user.email}
-          key={userName}
+          content={user && userEmailId === user.name && user.email}
+          key={userid._id}
           header={userName}
           position="top center"
           trigger={
-            <Image
-              floated="right"
-              size="massive"
-              src="https://react.semantic-ui.com/images/avatar/large/steve.jpg"
-              avatar
-            />
+            <Image floated="right" size="massive" src={userImage} avatar />
           }
         />
         <Card.Header>{userName}</Card.Header>
-        <Card.Meta as={Link} to={`/posts/${post.id}`}>
+        <Card.Meta as={Link} to={`/posts/${post._id}`}>
           {moment(createdAt).fromNow()}
         </Card.Meta>
         <Card.Description>{body}</Card.Description>
@@ -41,15 +45,15 @@ function PostCard({ post }) {
       <Card.Content extra>
         <LikeButton
           postId={id}
-          likes={upVote}
+          likes={upvotes}
           userName={user ? user.name : ""}
-          likeCount={upVoteCount}
+          likeCount={upvotesCount}
         />
         <DownvoteButton
           postId={id}
-          likes={downVote}
+          likes={downvotes}
           userName={user ? user.name : ""}
-          likeCount={upVoteCount}
+          likeCount={upvotesCount}
         />
         <Popup
           content="Click here to add comment on this post"
@@ -71,7 +75,7 @@ function PostCard({ post }) {
             </Button>
           }
         />
-        {user && user.name === userName && <DeleteButton postId={id} />}
+        {user && user.name === userName && <DeleteButton postId={id} onDelete={deletePostHandler}/>}
       </Card.Content>
     </Card>
   );

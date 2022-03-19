@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Form } from "semantic-ui-react";
+import axiosInstance from '../util/axiosInstance'
 
 function AddPost() {
-  const submitPostHandler=()=>{
-    console.log("submit post");
+  const [content,setContent]=useState('');
+  const changeValuesHandler=(e)=>{
+   setContent(e.target.value);
+  }
+  const submitPostHandler=async()=>{
+    if(content.trim().length>0)
+     await axiosInstance.post(`${process.env.REACT_APP_BACKEND_HOST}/post`,{content});
+    setContent(''); 
   }
 
   return (
@@ -14,9 +21,9 @@ function AddPost() {
           <Form.Input
             placeholder="Hi Guys"
             name="body"
-            // value={values.body}
+            value={content}
             // error={error ?error.graphQLErrors[0].message: false}
-            // onChange={changeValuesHandler}
+            onChange={changeValuesHandler}
           />
           <Button type="submit" color="teal">
             Add Post

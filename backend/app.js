@@ -11,7 +11,7 @@ const cors = require("cors");
 
 const authRouter = require("./routes/authRoutes");
 // const userRouter = require("./routes/userRoutes");
-// const postRouter = require("./routes/PostRoutes");
+const postRouter = require("./routes/postRoutes");
 // const UserModel = require("./model/userModel");
 
 process.on("uncaughtException", (err) => {
@@ -86,7 +86,7 @@ const PORT = process.env.PORT || 9000;
 
 app.use("/api/v1/", authRouter);
 // app.use("/api/v1/user", userRouter);
-// app.use("/api/v1/post", postRouter);
+app.use("/api/v1/post", postRouter);
 
 
 app.listen(PORT, console.log(`Server running at ${PORT}`));

@@ -10,7 +10,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const authRouter = require("./routes/authRoutes");
-// const userRouter = require("./routes/userRoutes");
+const replyRouter = require("./routes/replyRoutes");
 const postRouter = require("./routes/postRoutes");
 // const UserModel = require("./model/userModel");
 
@@ -63,7 +63,7 @@ app.use(
     }),
     cookie: {
       maxAge: 60 * 60 * 1000,
-      secure:false,
+      secure: false,
     },
   })
 );
@@ -83,11 +83,10 @@ app.use((req, res, next) => {
 
 const PORT = process.env.PORT || 9000;
 
-
 app.use("/api/v1/", authRouter);
 // app.use("/api/v1/user", userRouter);
 app.use("/api/v1/post", postRouter);
-
+app.use("/api/v1/reply", replyRouter);
 
 app.listen(PORT, console.log(`Server running at ${PORT}`));
 

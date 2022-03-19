@@ -10,7 +10,7 @@ const {
 } = require("../controller/replyController");
 const { ensureAuth, isAdmin } = require("../middleware/auth");
 
-router.get("/",ensureAuth ,getReplies);
+router.get("/" ,getReplies);
 
 router.post("/",ensureAuth ,createReply);
 

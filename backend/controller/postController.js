@@ -35,8 +35,9 @@ const createPost = async (req, res) => {
 const toggleBlackListPost = async (req, res) => {
   try {
     const change = { blacklist: true };
-    if (!req.body.blacklist) change.blacklist = false;
-    await postModel.findByIdAndUpdate(req.body.post_id, change);
+    const postId=req.query.postId.trim();
+    if (!req.query.blacklist) change.blacklist = false;
+    await postModel.findByIdAndUpdate(postId, change);
     res.status(200).send();
   } catch (e) {
     res.status(400).send();
@@ -45,7 +46,7 @@ const toggleBlackListPost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-      const postId=req.params.postId.trim();
+    const postId=req.params.postId.trim();
     const post = await postModel.findById(postId);
     if (req.user._id.toString() === post.userid.toString()) return await post.delete();
     res.status(200).send();

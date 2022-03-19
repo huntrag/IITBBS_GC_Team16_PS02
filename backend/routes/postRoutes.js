@@ -8,13 +8,13 @@ const {
   toggleBlackListPost,
   deletePost,
 } = require("../controller/postController");
-const { ensureAuth } = require("../middleware/auth");
+const { ensureAuth, isAdmin } = require("../middleware/auth");
 
 router.get("/", getAllPost);
 
 router.post("/", ensureAuth, createPost);
 
-router.patch("/blackList", ensureAuth, toggleBlackListPost);
+router.patch("/blackList", ensureAuth,isAdmin, toggleBlackListPost);
 
 router.delete("/:postId", ensureAuth, deletePost);
 module.exports = router;

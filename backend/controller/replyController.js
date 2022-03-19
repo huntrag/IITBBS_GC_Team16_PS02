@@ -4,9 +4,10 @@ const mongoose = require("mongoose");
 const getReplies = async (req, res) => {
   try {
     let sortby = { upvotes: -1 };
+    const postid=req.query.postid;
     let showBlacklist = { blacklist: "false" };
     if (req.session.isAdmin) showBlacklist = {};
-    const replies = await reply.find(showBlacklist).sort(sortby);
+    const replies = await reply.find({postid:postid,showBlacklist}).sort(sortby);
     res.status(200).json(replies);
   } catch (err) {
     res.status(500).send();
@@ -31,8 +32,8 @@ const createReply = async (req, res) => {
 const toggleBlackListReply = async (req, res) => {
   try {
     const change = { blacklist: true };
-    if (!req.body.blacklist) change.blacklist = false;
-    await reply.findByIdAndUpdate(req.body.reply_id, change);
+    if (!req.query.blacklist) change.blacklist = false;
+    await reply.findByIdAndUpdate(req.query.replyid, change);
     res.status(200).send();
   } catch (e) {
     res.status(400).send();

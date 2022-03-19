@@ -16,5 +16,5 @@ router.post("/",ensureAuth ,createReply);
 
 router.patch("/blacklist",ensureAuth, isAdmin,toggleBlackListReply);
 
-router.delete("/:postId",ensureAuth ,deleteReply);
+router.delete("/:replyId",ensureAuth ,deleteReply);
 module.exports = router;

@@ -6,10 +6,11 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/auth";
 import LikeButton from "./LikeButton";
 import DeleteButton from "./DeleteButton";
+import DownvoteButton from "./downVoteButton";
 
 function PostCard({ post }) {
-  const { body, createdAt, likes, id, userName, comments } = post;
-  const likeCount = likes.length;
+  const { body, createdAt, upVote, downVote, id, userName, comments } = post;
+  const upVoteCount = upVote.length;
   const commentCount = comments.length;
   const { user } = useContext(AuthContext);
 
@@ -18,7 +19,7 @@ function PostCard({ post }) {
     <Card fluid>
       <Card.Content>
         <Popup
-          content={userName === user.name && user.email}
+          content={user && userName === user.name && user.email}
           key={userName}
           header={userName}
           position="top center"
@@ -40,9 +41,15 @@ function PostCard({ post }) {
       <Card.Content extra>
         <LikeButton
           postId={id}
-          likes={likes}
+          likes={upVote}
           userName={user ? user.name : ""}
-          likeCount={likeCount}
+          likeCount={upVoteCount}
+        />
+        <DownvoteButton
+          postId={id}
+          likes={downVote}
+          userName={user ? user.name : ""}
+          likeCount={upVoteCount}
         />
         <Popup
           content="Click here to add comment on this post"

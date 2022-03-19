@@ -11,28 +11,28 @@ function LikeButton({ likeCount, postId, likes, userName }) {
 
   const likedButton = userName ? (
     liked ? (
-      <Button color="red">
-        <Icon name="heart" />
+      <Button color="grey">
+        <Icon name="arrow alternate circle up" />
       </Button>
     ) : (
-      <Button color="red" basic>
-        <Icon name="heart" />
+      <Button color="grey" basic>
+        <Icon name="arrow alternate circle up" />
       </Button>
     )
   ) : (
-    <Button as={Link} to="/login" color="red" basic>
-      <Icon name="heart" />
+    <Button as={Link} to="/login" color="grey" basic>
+      <Icon name="arrow alternate circle up" />
     </Button>
   );
   return (
     <Button as="div" labelPosition="right" onClick={likePostHandler}>
       <Popup
-        content={`${liked ? "Dislike" : "Like"}  this post`}
+        content="upvote this post"
         inverted
         position="left center"
         trigger={likedButton}
       />
-      <Label basic color="red" pointing="left">
+      <Label basic color="grey" pointing="left">
         {likeCount}
       </Label>
     </Button>

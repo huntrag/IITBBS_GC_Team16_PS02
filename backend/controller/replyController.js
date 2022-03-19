@@ -1,11 +1,11 @@
 const reply = require("../model/Replies");
 const mongoose = require("mongoose");
 
-const getreplies = async (req, res) => {
+const getReplies = async (req, res) => {
   try {
     let sortby = { upvotes: -1 };
     let showBlacklist = { blacklist: "false" };
-    if (req.session.user) showBlacklist = {};
+    if (req.session.isAdmin) showBlacklist = {};
     const replies = await reply.find(showBlacklist).sort(sortby);
     res.status(200).json(replies);
   } catch (err) {
@@ -13,13 +13,13 @@ const getreplies = async (req, res) => {
   }
 };
 
-const createreply = async (req, res) => {
+const createReply = async (req, res) => {
   try {
     const newreply = new reply({
       username: req.user.name,
       content: req.body.content,
       userid: mongoose.Types.ObjectId(req.user._id),
-      postid: mongoose.Types.ObjectId(req.body.reply_id)
+      postid: mongoose.Types.ObjectId(req.body.post_id)
     });
     await newreply.save();
     res.status(201).send();
@@ -28,7 +28,7 @@ const createreply = async (req, res) => {
   }
 };
 
-const updatereply = async (req, res) => {
+const toggleBlackListReply = async (req, res) => {
   try {
     const change = { blacklist: true };
     if (!req.body.blacklist) change.blacklist = false;
@@ -39,12 +39,14 @@ const updatereply = async (req, res) => {
   }
 };
 
-const deletereply = async (req, res) => {
+const deleteReply = async (req, res) => {
   try {
-    await reply.findByIdAndDelete(req.body.reply_id);
+    const replyId=req.params.replyId.trim();
+    const del_reply = await reply.findById(replyId);
+    if (req.user._id.toString() === del_reply.userid.toString()) return await del_reply.delete();
     res.status(200).send();
   } catch (err) {
     res.status(400).send();
   }
 };
-module.exports = { getreplies, createreply, updatereply, deletereply };
+module.exports = { getReplies, createReply, toggleBlackListReply, deleteReply };

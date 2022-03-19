@@ -1,5 +1,6 @@
 const postModel = require("../model/Posts");
 const mongoose = require("mongoose");
+const replyModel = require("../model/Replies");
 
 const getAllPost = async (req, res) => {
   try {
@@ -35,7 +36,7 @@ const createPost = async (req, res) => {
 const toggleBlackListPost = async (req, res) => {
   try {
     const change = { blacklist: true };
-    const postId=req.query.postId.trim();
+    const postId = req.query.postId.trim();
     if (!req.query.blacklist) change.blacklist = false;
     await postModel.findByIdAndUpdate(postId, change);
     res.status(200).send();
@@ -46,12 +47,31 @@ const toggleBlackListPost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   try {
-    const postId=req.params.postId.trim();
+    const postId = req.params.postId.trim();
     const post = await postModel.findById(postId);
-    if (req.user._id.toString() === post.userid.toString()) return await post.delete();
+    if (req.user._id.toString() === post.userid.toString())
+      return await post.delete();
     res.status(200).send();
   } catch (err) {
     res.status(400).send();
   }
 };
-module.exports = { getAllPost, createPost, toggleBlackListPost, deletePost };
+
+const getOnePost = async (req, res) => {
+  try {
+    const postId = req.params.postId.trim();
+    const post = await postModel.findById(postId).populate("userid");
+    const replies = await replyModel.find({ postid: postId });
+    res.status(200).json({ post, replies });
+  } catch (err) {
+    res.status(400).send();
+  }
+};
+
+module.exports = {
+  getAllPost,
+  createPost,
+  toggleBlackListPost,
+  deletePost,
+  getOnePost,
+};

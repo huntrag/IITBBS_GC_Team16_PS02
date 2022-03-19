@@ -31,7 +31,7 @@ const post_schema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "posts" }],
+    replies: [{ type: mongoose.Schema.Types.ObjectId, ref: "replies" }],
   },
   { timestamps: true }
 );

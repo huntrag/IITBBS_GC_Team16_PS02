@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Button, Card, Form } from "semantic-ui-react";
 import axiosInstance from "../util/axiosInstance";
 
-function AddPost({ postId }) {
+function AddPost({ postId ,onSubmit}) {
   const commentInputRef = useRef();
   const [content,setContent]=useState('');
   const changeValuesHandler=(e)=>{
@@ -13,6 +13,7 @@ function AddPost({ postId }) {
     if(content.trim().length>0)
      await axiosInstance.post(`${process.env.REACT_APP_BACKEND_HOST}/reply`,{content,postId});
     setContent(''); 
+    onSubmit();
   }
 
   return (

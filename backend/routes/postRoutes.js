@@ -7,10 +7,12 @@ const {
   createPost,
   toggleBlackListPost,
   deletePost,
+  getOnePost,
 } = require("../controller/postController");
 const { ensureAuth, isAdmin } = require("../middleware/auth");
 
 router.get("/", getAllPost);
+router.get("/currentPost/:postId", getOnePost);
 
 router.post("/", ensureAuth, createPost);
 

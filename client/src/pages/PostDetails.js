@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import {
   Button,
@@ -16,77 +16,111 @@ import { Link } from "react-router-dom";
 import DeleteButton from "../component/DeleteButton";
 import CommentDetails from "../component/CommentDetails";
 import AddComment from "../component/AddComment";
-import DownvoteButton from '../component/downVoteButton'
+import DownvoteButton from "../component/downVoteButton";
+import axiosInstance from "../util/axiosInstance";
 
 function PostDetails() {
   const { postId } = useParams();
 
   const { user } = useContext(AuthContext);
 
-  // const { body, comments, likes, createdAt, userName } = {};
+  const [post, setPost] = useState({});
+  const [submit,setSubmit]=useState(0)
+  const [replies, setReplies] = useState([]);
 
-  // const likeCount = likes.length;
+  // const { body, comments, likes, createdAt, userName } = {};
+  useEffect(() => {
+    const getOnePost = async () => {
+      const response = await axiosInstance(
+        `${process.env.REACT_APP_BACKEND_HOST}/post/currentPost/${postId}`
+      );
+      const { post, replies } = response.data;
+      setPost(post);
+      setReplies(replies);
+    };
+    getOnePost();
+  }, [submit]);
+  if (Object.keys(post).length === 0) return <p>Loading...</p>;
+  const {
+    content: body,
+    createdAt,
+    upvotes,
+    downvotes,
+    _id: id,
+    username: userName,
+    userid,
+  } = post;
+
+  const { image: userImage, mailId: userEmailId } = userid || {
+    image: "",
+    mailId: "",
+  };
+
+  const upVoteCount = upvotes.length;
+  const downVoteCount = downvotes.length;
+  const commentCount = replies.length;
 
   const commentHandler = () => {
     console.log("comments");
   };
+
+  const deletePostHandler=()=>{
+    console.log("Post deleted")
+  }
+
+  const submitCommentHandler=()=>{
+    setSubmit(submit+1);
+  }
 
   const postMarkup = (
     <Grid>
       <Grid.Row>
         <Grid.Column width={2}>
           <Popup
-            // content={userName === user.name && user.email}
-            // key={userName}
-            // header={userName}
-            trigger={
-              <Image
-                src="https://pbs.twimg.com/profile_images/1366466342354751491/JyhZpbtu_400x400.jpg"
-                size="big"
-                floated="right"
-              />
-            }
+            content={userEmailId === user.email && user.email}
+            key={userName}
+            header={userName}
+            trigger={<Image src={userImage} size="small" floated="right" />}
           />
         </Grid.Column>
         <Grid.Column width={10}>
           <Card fluid>
             <Card.Content>
-              {/* <Card.Header>{userName}</Card.Header> */}
+              <Card.Header>{userName}</Card.Header>
               <Card.Meta as={Link} to={`/posts/${postId}`}>
-                {/* {moment(createdAt).fromNow()} */}
+                {moment(createdAt).fromNow()}
               </Card.Meta>
-              <Card.Description>body</Card.Description>
-              {/* <Card.Description>{body}</Card.Description> */}
+              <Card.Description>{body}</Card.Description>
             </Card.Content>
             <hr />
             <Card.Content extra>
               <LikeButton
-              // postId={postId}
-              // likes={likes}
-              // userName={user ? user.name : ""}
-              // likeCount={likeCount}
+                postId={postId}
+                likes={upvotes}
+                userName={user ? user.name : ""}
+                likeCount={upVoteCount}
               />
               <DownvoteButton
-                // postId={id}
-                // likes={downvotes}
-                // userName={user ? user.name : ""}
-                // likeCount={upvotesCount}
+                postId={id}
+                likes={downvotes}
+                userName={user ? user.name : ""}
+                likeCount={downVoteCount}
               />
               <Button as="div" labelPosition="right" onClick={commentHandler}>
                 <Button basic color="blue">
                   <Icon name="comments" />
                 </Button>
                 <Label basic color="blue" pointing="left">
-                  {/* {comments.length} */}
+                  {commentCount}
                 </Label>
               </Button>
-              {/* {user && user.name === userName && ( */}
-              <DeleteButton postId={postId} />
-              {/* )} */}
+              {user && user.name === userName && (
+                <DeleteButton postId={postId} onDelete={deletePostHandler}/>
+              )}
             </Card.Content>
           </Card>
-          {user && <AddComment postId={postId} />}
-          {/* <CommentDetails comments={comments} postId={postId} /> */}
+          {user && <AddComment onSubmit={submitCommentHandler} postId={postId} />}
+          <CommentDetails comments={replies} postId={postId} />
         </Grid.Column>
       </Grid.Row>
     </Grid>

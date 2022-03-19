@@ -21,7 +21,7 @@ function App() {
         <MenuBar />
         <Routes>
           <Route element={<Home />} path="/" />
-          {/* <Route element={<PostDetails />} path="/posts/:postId" /> */}
+          <Route element={<PostDetails />} path="/posts/:postId" />
           <Route
             element={!user ? <Login /> : <Navigate to="/" />}
             path="/login"

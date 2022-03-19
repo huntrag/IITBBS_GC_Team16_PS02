@@ -6,7 +6,7 @@ function LikeButton({ likeCount, postId, likes, userName }) {
   const [liked, setLiked] = useState(false);
 
   const likePostHandler=()=>{
-    console.log("Like");
+    setLiked(!liked)
   }
 
   const likedButton = userName ? (
@@ -15,7 +15,7 @@ function LikeButton({ likeCount, postId, likes, userName }) {
         <Icon name="arrow alternate circle up" />
       </Button>
     ) : (
-      <Button color="grey" basic>
+      <Button color="black" basic>
         <Icon name="arrow alternate circle up" />
       </Button>
     )

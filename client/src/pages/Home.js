@@ -40,10 +40,15 @@ function Home() {
     setPosts(filterPost);
   };
 
+  console.log(user);
+
   return (
     <Grid columns={3}>
       <Grid.Row className="page-title">
         <h1>Recent Posts</h1>
+        {!user && (
+            <div class="ui yellow mini message">You have to login for accessing posts</div>
+        )}
       </Grid.Row>
       <Grid.Row>
         {user && (
@@ -56,7 +61,11 @@ function Home() {
           {posts &&
             posts.map((post) => (
               <Grid.Column key={post._id} style={{ marginBottom: "20px" }}>
-                <PostCard post={post} key={post._id} deletePostHandler={deletePostHandler}/>
+                <PostCard
+                  post={post}
+                  key={post._id}
+                  deletePostHandler={deletePostHandler}
+                />
               </Grid.Column>
             ))}
         </Transition.Group>

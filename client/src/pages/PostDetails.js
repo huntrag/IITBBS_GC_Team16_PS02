@@ -16,12 +16,12 @@ import { Link } from "react-router-dom";
 import DeleteButton from "../component/DeleteButton";
 import CommentDetails from "../component/CommentDetails";
 import AddComment from "../component/AddComment";
+import DownvoteButton from '../component/downVoteButton'
 
 function PostDetails() {
   const { postId } = useParams();
 
   const { user } = useContext(AuthContext);
-
 
   // const { body, comments, likes, createdAt, userName } = {};
 
@@ -61,10 +61,16 @@ function PostDetails() {
             <hr />
             <Card.Content extra>
               <LikeButton
-                // postId={postId}
-                // likes={likes}
+              // postId={postId}
+              // likes={likes}
+              // userName={user ? user.name : ""}
+              // likeCount={likeCount}
+              />
+              <DownvoteButton
+                // postId={id}
+                // likes={downvotes}
                 // userName={user ? user.name : ""}
-                // likeCount={likeCount}
+                // likeCount={upvotesCount}
               />
               <Button as="div" labelPosition="right" onClick={commentHandler}>
                 <Button basic color="blue">
@@ -75,7 +81,7 @@ function PostDetails() {
                 </Label>
               </Button>
               {/* {user && user.name === userName && ( */}
-                <DeleteButton postId={postId} />
+              <DeleteButton postId={postId} />
               {/* )} */}
             </Card.Content>
           </Card>

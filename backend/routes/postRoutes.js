@@ -4,7 +4,7 @@ const router = new express.Router();
 const mongoose = require('mongoose');
 const {
   getAllPost,
-  getPost,
+  getOnePost,
   createPost,
   vote,
   toggleBlackListPost,
@@ -14,7 +14,7 @@ const { /*ensureAuth,*/ isAdmin } = require('../middleware/auth');
 
 router.get('/', /*ensureAuth,*/ getAllPost);
 
-router.get('/:postId', /*ensureAuth,*/ getPost);
+router.get('/currentPost/:postId', /*ensureAuth,*/ getOnePost);
 
 router.post('/', /*ensureAuth,*/ createPost);
 

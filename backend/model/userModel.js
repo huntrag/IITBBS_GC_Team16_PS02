@@ -1,10 +1,18 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   mailId: {
     type: String,
     required: true,
+  },
+  role: {
+    type: String,
+    enum: {
+      values: ['admin', 'user'],
+      message: 'Invalid usertype',
+    },
+    default: 'user',
   },
   name: {
     type: String,
@@ -19,7 +27,7 @@ const UserSchema = new Schema({
   },
   role: {
     type: String,
-    default: "view",
+    default: 'view',
   },
   tokens: {
     type: Array,
@@ -27,4 +35,4 @@ const UserSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("user", UserSchema);
+module.exports = mongoose.model('user', UserSchema);

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import {
   Button,
   Label,
@@ -8,26 +8,26 @@ import {
   Icon,
   Image,
   Popup,
-} from "semantic-ui-react";
-import {  useNavigate } from "react-router";
-import moment from "moment";
-import LikeButton from "../component/LikeButton";
-import { AuthContext } from "../context/auth";
-import { Link } from "react-router-dom";
-import DeleteButton from "../component/DeleteButton";
-import CommentDetails from "../component/CommentDetails";
-import AddComment from "../component/AddComment";
-import DownvoteButton from "../component/downVoteButton";
-import axiosInstance from "../util/axiosInstance";
+} from 'semantic-ui-react';
+import { useNavigate } from 'react-router';
+import moment from 'moment';
+import LikeButton from '../component/LikeButton';
+import { AuthContext } from '../context/auth';
+import { Link } from 'react-router-dom';
+import DeleteButton from '../component/DeleteButton';
+import CommentDetails from '../component/CommentDetails';
+import AddComment from '../component/AddComment';
+import DownvoteButton from '../component/downVoteButton';
+import axiosInstance from '../util/axiosInstance';
 
 function PostDetails() {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { postId } = useParams();
 
   const { user } = useContext(AuthContext);
 
   const [post, setPost] = useState({});
-  const [submit,setSubmit]=useState(0)
+  const [submit, setSubmit] = useState(0);
   const [replies, setReplies] = useState([]);
 
   // const { body, comments, likes, createdAt, userName } = {};
@@ -37,6 +37,7 @@ function PostDetails() {
         `${process.env.REACT_APP_BACKEND_HOST}/post/currentPost/${postId}`
       );
       const { post, replies } = response.data;
+      console.log(response.data);
       setPost(post);
       setReplies(replies);
     };
@@ -54,8 +55,8 @@ function PostDetails() {
   } = post;
 
   const { image: userImage, mailId: userEmailId } = userid || {
-    image: "",
-    mailId: "",
+    image: '',
+    mailId: '',
   };
 
   const upVoteCount = upvotes.length;
@@ -63,17 +64,17 @@ function PostDetails() {
   const commentCount = replies.length;
 
   const commentHandler = () => {
-    console.log("comments");
+    console.log('comments');
   };
 
-  const deletePostHandler=()=>{
-    navigate("/", { replace: true });
-    console.log("Post deleted");
-  }
+  const deletePostHandler = () => {
+    navigate('/', { replace: true });
+    console.log('Post deleted');
+  };
 
-  const submitCommentHandler=()=>{
-    setSubmit(submit+1);
-  }
+  const submitCommentHandler = () => {
+    setSubmit(submit + 1);
+  };
 
   const postMarkup = (
     <Grid>
@@ -100,13 +101,13 @@ function PostDetails() {
               <LikeButton
                 postId={postId}
                 likes={upvotes}
-                userName={user ? user.name : ""}
+                userName={user ? user.name : ''}
                 likeCount={upVoteCount}
               />
               <DownvoteButton
                 postId={id}
                 likes={downvotes}
-                userName={user ? user.name : ""}
+                userName={user ? user.name : ''}
                 likeCount={downVoteCount}
               />
               <Button as="div" labelPosition="right" onClick={commentHandler}>
@@ -118,11 +119,13 @@ function PostDetails() {
                 </Label>
               </Button>
               {user && user.name === userName && (
-                <DeleteButton postId={postId} onDelete={deletePostHandler}/>
+                <DeleteButton postId={postId} onDelete={deletePostHandler} />
               )}
             </Card.Content>
           </Card>
-          {user && <AddComment onSubmit={submitCommentHandler} postId={postId} />}
+          {user && (
+            <AddComment onSubmit={submitCommentHandler} postId={postId} />
+          )}
           <CommentDetails comments={replies} postId={postId} />
         </Grid.Column>
       </Grid.Row>

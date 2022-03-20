@@ -72,11 +72,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   if (!req.user) return next();
   if (req.user.mailId === process.env.ADMIN_ID) {
+    req.user.role = 'admin';
     req.session.isAdmin = true;
     req.session.save();
+    await req.user.save();
   } else req.session.isAdmin = false;
   next();
 });

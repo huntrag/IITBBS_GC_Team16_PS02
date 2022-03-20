@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const r_schema = new mongoose.Schema(
+const reply_schema = new mongoose.Schema(
   {
     content: {
       type: String,
@@ -11,6 +11,10 @@ const r_schema = new mongoose.Schema(
       },
     },
     upvotes: {
+      type: Array,
+      default: [],
+    },
+    downvotes: {
       type: Array,
       default: [],
     },
@@ -26,10 +30,6 @@ const r_schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    downvotes: {
-      type: Array,
-      default: [],
-    },
     blackList: {
       type: Boolean,
       default: false,
@@ -38,6 +38,14 @@ const r_schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const reply = mongoose.model('reply', r_schema);
+reply_schema.virtual('noUpvotes').get(function () {
+  return this.upvotes.length;
+});
+
+reply_schema.virtual('noDownvotes').get(function () {
+  return this.downvotes.length;
+});
+
+const reply = mongoose.model('reply', reply_schema);
 
 module.exports = reply;

@@ -18,16 +18,14 @@ const getAllPost = async (req, res) => {
   }
 };
 
-const getPost = async (req, res) => {
+const getOnePost = async (req, res) => {
   try {
-    const postId = req.params.postId;
-    const post = await postModel.findById(postId);
-    res.status(200).json(post);
+    const postId = req.params.postId.trim();
+    const post = await postModel.findById(postId).populate('userid');
+    const replies = await replyModel.find({ postid: postId });
+    res.status(200).json({ post, replies });
   } catch (err) {
-    res.status(400).json({
-      status: 'fairl',
-      message: err.message,
-    });
+    res.status(400).send();
   }
 };
 
@@ -128,7 +126,7 @@ const vote = async (req, res) => {
 
 module.exports = {
   getAllPost,
-  getPost,
+  getOnePost,
   vote,
   createPost,
   toggleBlackListPost,

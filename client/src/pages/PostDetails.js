@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router";
 import {
   Button,
   Label,
@@ -8,17 +8,17 @@ import {
   Icon,
   Image,
   Popup,
-} from 'semantic-ui-react';
-import { useNavigate } from 'react-router';
-import moment from 'moment';
-import LikeButton from '../component/LikeButton';
-import { AuthContext } from '../context/auth';
-import { Link } from 'react-router-dom';
-import DeleteButton from '../component/DeleteButton';
-import CommentDetails from '../component/CommentDetails';
-import AddComment from '../component/AddComment';
-import DownvoteButton from '../component/downVoteButton';
-import axiosInstance from '../util/axiosInstance';
+} from "semantic-ui-react";
+import { useNavigate } from "react-router";
+import moment from "moment";
+import LikeButton from "../component/LikeButton";
+import { AuthContext } from "../context/auth";
+import { Link } from "react-router-dom";
+import DeleteButton from "../component/DeleteButton";
+import CommentDetails from "../component/CommentDetails";
+import AddComment from "../component/AddComment";
+import DownvoteButton from "../component/downVoteButton";
+import axiosInstance from "../util/axiosInstance";
 
 function PostDetails() {
   const navigate = useNavigate();
@@ -54,21 +54,21 @@ function PostDetails() {
   } = post;
 
   const { image: userImage, mailId: userEmailId } = userid || {
-    image: '',
-    mailId: '',
+    image: "",
+    mailId: "",
   };
 
-  const upVoteCount = upvotes.length;
-  const downVoteCount = downvotes.length;
+  const upVotesCount = upvotes.length;
+  const downVotesCount = downvotes.length;
   const commentCount = replies.length;
 
   const commentHandler = () => {
-    console.log('comments');
+    console.log("comments");
   };
 
   const deletePostHandler = () => {
-    navigate('/', { replace: true });
-    console.log('Post deleted');
+    navigate("/", { replace: true });
+    console.log("Post deleted");
   };
 
   const submitCommentHandler = () => {
@@ -98,16 +98,18 @@ function PostDetails() {
             <hr />
             <Card.Content extra>
               <LikeButton
-                postId={postId}
-                likes={upvotes}
-                userName={user ? user.name : ''}
-                likeCount={upVoteCount}
+                postId={id}
+                upvotes={upvotes}
+                userId={user ? user.id : ""}
+                likeCount={upVotesCount}
+                onSubmit={submitCommentHandler}
               />
               <DownvoteButton
                 postId={id}
-                likes={downvotes}
-                userName={user ? user.name : ''}
-                likeCount={downVoteCount}
+                downvotes={downvotes}
+                userId={user ? user.id : ""}
+                onSubmit={submitCommentHandler}
+                likeCount={downVotesCount}
               />
               <Button as="div" labelPosition="right" onClick={commentHandler}>
                 <Button basic color="blue">
@@ -125,7 +127,11 @@ function PostDetails() {
           {user && (
             <AddComment onSubmit={submitCommentHandler} postId={postId} />
           )}
-          <CommentDetails comments={replies} postId={postId} onSubmit={submitCommentHandler} />
+          <CommentDetails
+            comments={replies}
+            postId={postId}
+            onSubmit={submitCommentHandler}
+          />
         </Grid.Column>
       </Grid.Row>
     </Grid>

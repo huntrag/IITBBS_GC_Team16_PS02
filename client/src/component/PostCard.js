@@ -20,7 +20,7 @@ function PostCard({ post ,deletePostHandler}) {
     userid,
   } = post;
   const upvotesCount = upvotes.length;
-  const downvotesCount = upvotes.length;
+  const downvotesCount = downvotes.length;
   const commentCount = replies.length;
   const { image: userImage, mailId: userEmailId } = userid;
   const { user } = useContext(AuthContext);
@@ -46,14 +46,14 @@ function PostCard({ post ,deletePostHandler}) {
       <Card.Content extra>
         <LikeButton
           postId={id}
-          likes={upvotes}
-          userName={user ? user.name : ""}
+          upvotes={upvotes}
+          userId={user ? user.id : ""}
           likeCount={upvotesCount}
         />
         <DownvoteButton
           postId={id}
-          likes={downvotes}
-          userName={user ? user.name : ""}
+          downvotes={downvotes}
+          userId={user ? user.id : ""}
           likeCount={downvotesCount}
         />
         <Popup

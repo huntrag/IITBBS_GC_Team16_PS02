@@ -25,7 +25,7 @@ function CommentDetails({ comments, postId,onSubmit }) {
           <LikeButton
             postId={postId}
             likes={comment.upvotes}
-            userName={user ? user.name : ""}
+            userId={user ? user.id : ""}
             likeCount={comment.upvotes.length}
           />
           <DownvoteButton

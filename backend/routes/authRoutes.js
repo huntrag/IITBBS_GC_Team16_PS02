@@ -22,6 +22,9 @@ router.get(
 );
 
 router.get("/logout", (req, res) => {
+  req.session.destroy(function(err) {
+    console.log(err);
+ });
   req.logout();
   res.redirect( process.env.FRONTEND_HOST);
 });

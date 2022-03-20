@@ -44,9 +44,9 @@ const createReply = async (req, res) => {
 
 const toggleBlackListReply = async (req, res) => {
   try {
-    const change = { blacklist: true };
-    if (!req.query.blacklist) change.blacklist = false;
-    await reply.findByIdAndUpdate(req.query.replyid, change);
+    const change = { blackList: !req.body.blacklist };
+    const replyId = req.body.replyId;
+    await reply.findByIdAndUpdate(replyId, change);
     res.status(200).send();
   } catch (e) {
     res.status(400).send();

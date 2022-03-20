@@ -5,20 +5,32 @@ const post = require("../model/Posts");
 const router = new express.Router();
 const mongoose = require("mongoose");
 const { ensureAuth, isAdmin } = require("../middleware/auth");
-
-router.patch("/user/blacklist",ensureAuth,isAdmin,async(req,res)=>
+router.patch("/blacklist",ensureAuth,isAdmin,async(req,res)=>
 {
     try{
         const userid=req.query.userid;
-        const change={blacklist: true};
-        if(!req.query.blacklist)
-            change.blacklist=false;
+        const change = { blackList: !req.body.blacklist };
         await user.findByIdAndUpdate(userid,change);
-        res.send("OK");
+        const session=await user.startSession();
+        session.startTransaction();
+        try{
+            const transaction_option={session};
+            await user.findByIdAndUpdate(userid,change,transaction_option);
+            await post.updateMany({"userid":mongoose.Types.ObjectId(userid)},change,transaction_option);
+            await reply.updateMany({"userid":mongoose.Types.ObjectId(userid)},change,transaction_option);
+            await session.commitTransaction();
+            session.endSession();
+            res.send("OK");
+        }
+        catch(e){
+            await session.abortTransaction();
+            session.endSession();
+            throw new Error();
+        }
+
     }
     catch(e){
         res.status(400).send();
     }
 });
-
 module.exports=router;

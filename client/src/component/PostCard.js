@@ -7,8 +7,9 @@ import { AuthContext } from "../context/auth";
 import LikeButton from "./LikeButton";
 import DeleteButton from "./DeleteButton";
 import DownvoteButton from "./downVoteButton";
+import BlackButton from "./BlackButton";
 
-function PostCard({ post ,deletePostHandler}) {
+function PostCard({ post, deletePostHandler }) {
   const {
     content: body,
     createdAt,
@@ -18,32 +19,40 @@ function PostCard({ post ,deletePostHandler}) {
     username: userName,
     replies,
     userid,
-    blacklist
+    blacklist,
   } = post;
   const upvotesCount = upvotes.length;
   const downvotesCount = downvotes.length;
   const commentCount = replies.length;
   const { image: userImage, mailId: userEmailId } = userid;
   const { user } = useContext(AuthContext);
+  const blacklistPopup = (
+    <div>
+      <p>{userName}</p>
+      {user && user.isAdmin && (
+        <BlackButton userId={userid._id} blacklist={userid.blackList} />
+      )}
+    </div>
+  );
 
   return (
     <Card fluid>
       <Card.Content>
         <Popup
-          content={user && userEmailId === user.name && user.email}
-          key={userid._id}
-          header={userName}
-          position="top center"
+          wide
           trigger={
             <Image floated="right" size="massive" src={userImage} avatar />
           }
-          />
+          on="click"
+        >
+          {blacklistPopup}
+        </Popup>
         <Card.Header>{userName}</Card.Header>
         <Card.Meta as={Link} to={`/posts/${post._id}`}>
           {moment(createdAt).fromNow()}
         </Card.Meta>
         <Card.Description>{body}</Card.Description>
-          {blacklist&&<strong>BlackListed</strong>}
+        {blacklist && <strong>BlackListed</strong>}
       </Card.Content>
       <Card.Content extra>
         <LikeButton
@@ -78,7 +87,9 @@ function PostCard({ post ,deletePostHandler}) {
             </Button>
           }
         />
-        {user && user.name === userName && <DeleteButton postId={id} onDelete={deletePostHandler}/>}
+        {user && user.name === userName && (
+          <DeleteButton postId={id} onDelete={deletePostHandler} />
+        )}
       </Card.Content>
     </Card>
   );

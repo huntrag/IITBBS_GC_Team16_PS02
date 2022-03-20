@@ -2,6 +2,7 @@ import moment from "moment";
 import React, { useContext } from "react";
 import { Card } from "semantic-ui-react";
 import { AuthContext } from "../context/auth";
+import BlackButton from "./BlackButton";
 import DeleteButton from "./DeleteButton";
 import DownvoteButton from "./downVoteButton";
 import LikeButton from "./LikeButton";
@@ -40,6 +41,13 @@ function CommentDetails({ comments, postId, onSubmit }) {
             userId={user ? user.id : ""}
             likeCount={comment.downvotes.length}
           />
+          {user && user.isAdmin && (
+            <BlackButton
+              blacklist={comment.blackList}
+              replyId={comment._id}
+              onSubmit={onSubmit}
+            />
+          )}
         </Card.Content>
       </Card>
     ))

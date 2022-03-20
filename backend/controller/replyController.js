@@ -1,12 +1,12 @@
-const reply = require('../model/Replies');
-const mongoose = require('mongoose');
-const post = require('../model/Posts');
+const reply = require("../model/Replies");
+const mongoose = require("mongoose");
+const post = require("../model/Posts");
 
 const getReplies = async (req, res) => {
   try {
     let sortby = { upvotes: -1 };
     const postid = req.query.postid;
-    let showBlacklist = { blacklist: 'false' };
+    let showBlacklist = { blacklist: "false" };
     if (req.session.isAdmin) showBlacklist = {};
     const replies = await reply
       .find({ postid: postid, showBlacklist })
@@ -100,7 +100,7 @@ const vote = async (req, res) => {
     change = { downvotes: downvoters, upvotes: upvoters };
     await reply.findByIdAndUpdate(replyId, change);
     res.status(200).json({
-      status: 'success',
+      status: "success",
     });
   } catch (err) {
     res.status(400).send();
@@ -109,10 +109,21 @@ const vote = async (req, res) => {
 
 const deleteReply = async (req, res) => {
   try {
-    const replyId = req.params.replyId.trim();
+    const replyId = req.params.replyId;
+    const postId = req.params.postId;
     const del_reply = await reply.findById(replyId);
-    if (req.user._id.toString() === del_reply.userid.toString())
-      return await del_reply.delete();
+
+    if (req.user._id.toString() === del_reply.userid.toString()) {
+      const replyPost = await post.findById(postId);
+      const replyIndex = replyPost.replies.findIndex(
+        (reply) => reply.toString() === replyId
+      );
+      if (replyIndex !== -1) {
+        replyPost.replies.splice(replyIndex, 1);
+        await replyPost.save();
+        await del_reply.delete();
+      }
+    }
     res.status(200).send();
   } catch (err) {
     res.status(400).send();

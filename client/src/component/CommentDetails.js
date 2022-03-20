@@ -6,7 +6,7 @@ import DeleteButton from "./DeleteButton";
 import DownvoteButton from "./downVoteButton";
 import LikeButton from "./LikeButton";
 
-function CommentDetails({ comments, postId }) {
+function CommentDetails({ comments, postId,onSubmit }) {
   const { user } = useContext(AuthContext);
   if (!comments) return <p>Loading...</p>;
   return (
@@ -15,7 +15,7 @@ function CommentDetails({ comments, postId }) {
       <Card fluid key={comment._id}>
         <Card.Content>
           {user && user.name === comment.username && (
-            <DeleteButton postId={postId} commentId={comment._id} />
+            <DeleteButton postId={postId} commentId={comment._id} onSubmit={onSubmit}/>
           )}
           <Card.Header>{comment.username}</Card.Header>
           <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>

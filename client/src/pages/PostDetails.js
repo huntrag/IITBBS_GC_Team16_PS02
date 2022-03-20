@@ -37,7 +37,6 @@ function PostDetails() {
         `${process.env.REACT_APP_BACKEND_HOST}/post/currentPost/${postId}`
       );
       const { post, replies } = response.data;
-      console.log(response.data);
       setPost(post);
       setReplies(replies);
     };
@@ -126,7 +125,7 @@ function PostDetails() {
           {user && (
             <AddComment onSubmit={submitCommentHandler} postId={postId} />
           )}
-          <CommentDetails comments={replies} postId={postId} />
+          <CommentDetails comments={replies} postId={postId} onSubmit={submitCommentHandler} />
         </Grid.Column>
       </Grid.Row>
     </Grid>

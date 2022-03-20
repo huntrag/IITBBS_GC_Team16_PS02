@@ -25,7 +25,7 @@ function AddPost() {
             // error={error ?error.graphQLErrors[0].message: false}
             onChange={changeValuesHandler}
           />
-          <Button type="submit" color="teal">
+          <Button type="submit" color="teal" disabled={content.trim().length === 0}>
             Add Post
           </Button>
         </Form.Field>

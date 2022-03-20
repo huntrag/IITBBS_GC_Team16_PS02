@@ -20,8 +20,10 @@ module.exports = (passport) => {
 
         try {
           let user = await User.findOne({ mailId: profile.emails[0].value });
-          if (user) done(null, user);
-          else {
+          if (user) {
+            if (!user.blackList) done(null, user);
+            else done(null, null);
+          } else {
             if (profile._json.hd === "iitbbs.ac.in") {
               await newUser.save();
               done(null, newUser);

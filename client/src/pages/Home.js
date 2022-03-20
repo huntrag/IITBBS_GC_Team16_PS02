@@ -40,7 +40,7 @@ function Home() {
     setPosts(filterPost);
   };
   return (
-    <Grid columns={3}>
+    <Grid columns={2}>
       <Grid.Row className="page-title">
         <h1>Recent Posts</h1>
         {!user && (

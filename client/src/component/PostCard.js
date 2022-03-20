@@ -16,11 +16,12 @@ function PostCard({ post ,deletePostHandler}) {
     downvotes,
     _id: id,
     username: userName,
-    repiles,
+    replies,
     userid,
   } = post;
   const upvotesCount = upvotes.length;
-  const commentCount = repiles.length;
+  const downvotesCount = upvotes.length;
+  const commentCount = replies.length;
   const { image: userImage, mailId: userEmailId } = userid;
   const { user } = useContext(AuthContext);
 
@@ -53,7 +54,7 @@ function PostCard({ post ,deletePostHandler}) {
           postId={id}
           likes={downvotes}
           userName={user ? user.name : ""}
-          likeCount={upvotesCount}
+          likeCount={downvotesCount}
         />
         <Popup
           content="Click here to add comment on this post"

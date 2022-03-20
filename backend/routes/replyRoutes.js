@@ -19,5 +19,5 @@ router.patch('/blacklist', ensureAuth, isAdmin, toggleBlackListReply);
 
 router.patch('/vote', vote);
 
-router.delete('/:replyId', ensureAuth, deleteReply);
+router.delete('/:replyId/delete/:postId', ensureAuth, deleteReply);
 module.exports = router;

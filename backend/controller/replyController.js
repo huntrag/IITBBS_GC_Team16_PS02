@@ -115,10 +115,21 @@ const vote = async (req, res) => {
 
 const deleteReply = async (req, res) => {
   try {
-    const replyId = req.params.replyId.trim();
+    const replyId = req.params.replyId;
+    const postId = req.params.postId;
     const del_reply = await reply.findById(replyId);
-    if (req.user._id.toString() === del_reply.userid.toString())
-      return await del_reply.delete();
+
+    if (req.user._id.toString() === del_reply.userid.toString()) {
+      const replyPost = await post.findById(postId);
+      const replyIndex = replyPost.replies.findIndex(
+        (reply) => reply.toString() === replyId
+      );
+      if (replyIndex !== -1) {
+        replyPost.replies.splice(replyIndex, 1);
+        await replyPost.save();
+        await del_reply.delete();
+      }
+    }
     res.status(200).send();
   } catch (err) {
     res.status(400).send();

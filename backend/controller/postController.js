@@ -1,8 +1,10 @@
 const postModel = require('../model/Posts');
+const replyModel = require('../model/Replies');
 const mongoose = require('mongoose');
 
 const getAllPost = async (req, res) => {
   try {
+    //?sort=hot
     let sortby = { createdAt: -1 };
     if (req.query.sort == 'hot') sortby = { noUpvotes: 1, noDownvotes: -1 };
     let showBlacklist = { blacklist: 'false' };
@@ -20,9 +22,14 @@ const getAllPost = async (req, res) => {
 
 const getOnePost = async (req, res) => {
   try {
-    const postId = req.params.postId.trim();
+    const postId = req.params.postId;
+    let sortby = { upvotes: -1 };
+    let showBlacklist = { blacklist: 'false' };
+    if (req.session.isAdmin) showBlacklist = {};
     const post = await postModel.findById(postId).populate('userid');
-    const replies = await replyModel.find({ postid: postId });
+    const replies = await replyModel
+      .find({ postid: postId, showBlacklist })
+      .sort(sortby);
     res.status(200).json({ post, replies });
   } catch (err) {
     res.status(400).send();
@@ -47,8 +54,8 @@ const toggleBlackListPost = async (req, res) => {
   try {
     console.log(req.body.post_id);
     const change = { blacklist: true };
-    const postId = req.query.postId.trim();
-    if (!req.query.blacklist) change.blacklist = false;
+    const postId = req.body.post_id;
+    if (!req.body.blacklist) change.blacklist = false;
     await postModel.findByIdAndUpdate(postId, change);
     res.status(200).send();
   } catch (e) {

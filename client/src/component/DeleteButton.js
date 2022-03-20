@@ -3,15 +3,18 @@ import { Button, Confirm, Icon, Popup } from "semantic-ui-react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../util/axiosInstance";
 
-function DeleteButton({ postId, commentId ,onDelete}) {
+function DeleteButton({ postId, commentId, onDelete ,onSubmit }) {
   const [confirmOpen, setComfirmOpen] = useState(false);
   const navigate = useNavigate();
-  const deletePostHandler=async()=>{
-    const API_URL=commentId?``:`${process.env.REACT_APP_BACKEND_HOST}/post/${postId}`
+  const deletePostHandler = async () => {
+    const API_URL = commentId
+      ? `${process.env.REACT_APP_BACKEND_HOST}/reply/${commentId}/delete/${postId}`
+      : `${process.env.REACT_APP_BACKEND_HOST}/post/${postId}`;
     setComfirmOpen(false);
-    onDelete(postId);
+    if (!commentId) onDelete(postId);
+    else onSubmit();
     await axiosInstance.delete(API_URL);
-  }
+  };
   return (
     <>
       <Popup

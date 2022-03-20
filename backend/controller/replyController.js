@@ -4,7 +4,9 @@ const post = require('../model/Posts');
 
 const getReplies = async (req, res) => {
   try {
-    let sortby = { upvotes: -1 };
+    let sortby = { createdAt: -1 };
+    if (req.query.sort == 'hot') sortby = { noUpvotes: 1, noDownvotes: -1 };
+    if (req.query.sort == 'recent') sortby = { updatedAt: -1 };
     const postid = req.query.postid;
     let showBlacklist = { blacklist: 'false' };
     if (req.session.isAdmin) showBlacklist = {};
@@ -63,45 +65,49 @@ const vote = async (req, res) => {
     const userId = req.body.userId;
     // const userId = req.user._id;
     console.log(up);
-    const rep = await reply.findById(replyId);
-    let downvoters = rep.downvotes;
-    let upvoters = rep.upvotes;
-    if (up) {
-      if (downvoters.includes(userId)) {
-        const index = downvoters.indexOf(userId);
-        if (index > -1) {
-          downvoters.splice(index, 1);
+    try {
+      const rep = await reply.findById(replyId);
+      let downvoters = rep.downvotes;
+      let upvoters = rep.upvotes;
+      if (up) {
+        if (downvoters.includes(userId)) {
+          const index = downvoters.indexOf(userId);
+          if (index > -1) {
+            downvoters.splice(index, 1);
+          }
         }
-      }
-      if (upvoters.includes(userId)) {
-        const index = upvoters.indexOf(userId);
-        if (index > -1) {
-          upvoters.splice(index, 1);
-        }
-      } else {
-        upvoters.push(userId);
-      }
-    } else {
-      if (upvoters.includes(userId)) {
-        const index = upvoters.indexOf(userId);
-        if (index > -1) {
-          upvoters.splice(index, 1);
-        }
-      }
-      if (downvoters.includes(userId)) {
-        const index = downvoters.indexOf(userId);
-        if (index > -1) {
-          downvoters.splice(index, 1);
+        if (upvoters.includes(userId)) {
+          const index = upvoters.indexOf(userId);
+          if (index > -1) {
+            upvoters.splice(index, 1);
+          }
+        } else {
+          upvoters.push(userId);
         }
       } else {
-        downvoters.push(userId);
+        if (upvoters.includes(userId)) {
+          const index = upvoters.indexOf(userId);
+          if (index > -1) {
+            upvoters.splice(index, 1);
+          }
+        }
+        if (downvoters.includes(userId)) {
+          const index = downvoters.indexOf(userId);
+          if (index > -1) {
+            downvoters.splice(index, 1);
+          }
+        } else {
+          downvoters.push(userId);
+        }
       }
+      change = { downvotes: downvoters, upvotes: upvoters };
+      await reply.findByIdAndUpdate(replyId, change);
+      res.status(200).json({
+        status: 'success',
+      });
+    } catch (err) {
+      res.status(404).send();
     }
-    change = { downvotes: downvoters, upvotes: upvoters };
-    await reply.findByIdAndUpdate(replyId, change);
-    res.status(200).json({
-      status: 'success',
-    });
   } catch (err) {
     res.status(400).send();
   }

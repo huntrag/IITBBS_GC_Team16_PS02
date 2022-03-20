@@ -3,10 +3,10 @@ const mongoose = require('mongoose');
 
 const getAllPost = async (req, res) => {
   try {
-    let sortby = { modifiedAt: -1 };
+    let sortby = { createdAt: -1 };
+    if (req.query.sort == 'hot') sortby = { noUpvotes: 1, noDownvotes: -1 };
     let showBlacklist = { blacklist: 'false' };
     if (req.session.isAdmin) showBlacklist = {};
-    if (req.query.sortby == 'upvotes') sortby = { upvotes: -1 };
     const posts = await postModel
       .find(showBlacklist)
       .sort(sortby)
@@ -79,46 +79,53 @@ const vote = async (req, res) => {
     const postId = req.body.postId;
     const userId = req.body.userId;
     // const userId = req.user._id
-    console.log(up);
-    const post = await postModel.findById(postId);
-    let downvoters = post.downvotes;
-    let upvoters = post.upvotes;
-    if (up) {
-      if (downvoters.includes(userId)) {
-        const index = downvoters.indexOf(userId);
-        if (index > -1) {
-          downvoters.splice(index, 1);
+    try {
+      const post = await postModel.findById(postId);
+      console.log(post);
+      let downvoters = post.downvotes;
+      let upvoters = post.upvotes;
+      if (up) {
+        if (downvoters.includes(userId)) {
+          const index = downvoters.indexOf(userId);
+          if (index > -1) {
+            downvoters.splice(index, 1);
+          }
         }
-      }
-      if (upvoters.includes(userId)) {
-        const index = upvoters.indexOf(userId);
-        if (index > -1) {
-          upvoters.splice(index, 1);
-        }
-      } else {
-        upvoters.push(userId);
-      }
-    } else {
-      if (upvoters.includes(userId)) {
-        const index = upvoters.indexOf(userId);
-        if (index > -1) {
-          upvoters.splice(index, 1);
-        }
-      }
-      if (downvoters.includes(userId)) {
-        const index = downvoters.indexOf(userId);
-        if (index > -1) {
-          downvoters.splice(index, 1);
+        if (upvoters.includes(userId)) {
+          const index = upvoters.indexOf(userId);
+          if (index > -1) {
+            upvoters.splice(index, 1);
+          }
+        } else {
+          upvoters.push(userId);
         }
       } else {
-        downvoters.push(userId);
+        if (upvoters.includes(userId)) {
+          const index = upvoters.indexOf(userId);
+          if (index > -1) {
+            upvoters.splice(index, 1);
+          }
+        }
+        if (downvoters.includes(userId)) {
+          const index = downvoters.indexOf(userId);
+          if (index > -1) {
+            downvoters.splice(index, 1);
+          }
+        } else {
+          downvoters.push(userId);
+        }
       }
+      change = { downvotes: downvoters, upvotes: upvoters };
+      await postModel.findByIdAndUpdate(postId, change);
+      res.status(200).json({
+        status: 'success',
+      });
+    } catch (err) {
+      res.status(404).json({
+        status: 'fail',
+        message: 'Post does not exit',
+      });
     }
-    change = { downvotes: downvoters, upvotes: upvoters };
-    await postModel.findByIdAndUpdate(postId, change);
-    res.status(200).json({
-      status: 'success',
-    });
   } catch (err) {
     res.status(400).send();
   }

@@ -83,7 +83,7 @@ app.use(async (req, res, next) => {
   next();
 });
 
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 8000;
 
 app.use('/api/v1/', authRouter);
 // app.use("/api/v1/user", userRouter);

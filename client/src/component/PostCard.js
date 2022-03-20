@@ -18,6 +18,7 @@ function PostCard({ post ,deletePostHandler}) {
     username: userName,
     replies,
     userid,
+    blacklist
   } = post;
   const upvotesCount = upvotes.length;
   const downvotesCount = downvotes.length;
@@ -36,12 +37,13 @@ function PostCard({ post ,deletePostHandler}) {
           trigger={
             <Image floated="right" size="massive" src={userImage} avatar />
           }
-        />
+          />
         <Card.Header>{userName}</Card.Header>
         <Card.Meta as={Link} to={`/posts/${post._id}`}>
           {moment(createdAt).fromNow()}
         </Card.Meta>
         <Card.Description>{body}</Card.Description>
+          {blacklist&&<strong>BlackListed</strong>}
       </Card.Content>
       <Card.Content extra>
         <LikeButton

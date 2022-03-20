@@ -52,10 +52,8 @@ const createPost = async (req, res) => {
 
 const toggleBlackListPost = async (req, res) => {
   try {
-    console.log(req.body.post_id);
-    const change = { blacklist: true };
-    const postId = req.body.post_id;
-    if (!req.body.blacklist) change.blacklist = false;
+    const change = { blacklist: !req.body.blacklist };
+    const postId = req.body.postId;
     await postModel.findByIdAndUpdate(postId, change);
     res.status(200).send();
   } catch (e) {

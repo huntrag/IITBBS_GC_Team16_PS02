@@ -19,6 +19,7 @@ import CommentDetails from "../component/CommentDetails";
 import AddComment from "../component/AddComment";
 import DownvoteButton from "../component/downVoteButton";
 import axiosInstance from "../util/axiosInstance";
+import BlackButton from "../component/BlackButton";
 
 function PostDetails() {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ function PostDetails() {
       setReplies(replies);
     };
     getOnePost();
-  }, [submit]);
+  }, [submit, postId]);
   if (Object.keys(post).length === 0) return <p>Loading...</p>;
   const {
     content: body,
@@ -50,6 +51,7 @@ function PostDetails() {
     downvotes,
     _id: id,
     username: userName,
+    blacklist,
     userid,
   } = post;
 
@@ -94,7 +96,9 @@ function PostDetails() {
                 {moment(createdAt).fromNow()}
               </Card.Meta>
               <Card.Description>{body}</Card.Description>
+              {blacklist && <strong>BlackListed</strong>}
             </Card.Content>
+
             <hr />
             <Card.Content extra>
               <LikeButton
@@ -119,6 +123,13 @@ function PostDetails() {
                   {commentCount}
                 </Label>
               </Button>
+              {user && user.isAdmin && (
+                <BlackButton
+                  blacklist={blacklist}
+                  postId={postId}
+                  onSubmit={submitCommentHandler}
+                />
+              )}
               {user && user.name === userName && (
                 <DeleteButton postId={postId} onDelete={deletePostHandler} />
               )}

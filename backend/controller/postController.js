@@ -72,7 +72,7 @@ const deletePost = async (req, res) => {
 
 const vote = async (req, res) => {
   // request body {
-  //   upvote:Boolean
+  //   upvote:Boolean  // If someone wants to upvote this will be true if downvote then false
   //   postId:
   //   userId
   // }
@@ -80,6 +80,7 @@ const vote = async (req, res) => {
     const up = req.body.upvote;
     const postId = req.body.postId;
     const userId = req.body.userId;
+    // const userId = req.user._id
     console.log(up);
     const post = await postModel.findById(postId);
     let downvoters = post.downvotes;

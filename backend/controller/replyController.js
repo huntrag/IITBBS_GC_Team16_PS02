@@ -51,6 +51,62 @@ const toggleBlackListReply = async (req, res) => {
   }
 };
 
+const vote = async (req, res) => {
+  // request body {
+  //   upvote:Boolean
+  //   replyId:
+  //   userId
+  // }
+  try {
+    const up = req.body.upvote; // If someone wants to upvote this will be true if downvote then false
+    const replyId = req.body.replyId;
+    const userId = req.body.userId;
+    // const userId = req.user._id;
+    console.log(up);
+    const rep = await reply.findById(replyId);
+    let downvoters = rep.downvotes;
+    let upvoters = rep.upvotes;
+    if (up) {
+      if (downvoters.includes(userId)) {
+        const index = downvoters.indexOf(userId);
+        if (index > -1) {
+          downvoters.splice(index, 1);
+        }
+      }
+      if (upvoters.includes(userId)) {
+        const index = upvoters.indexOf(userId);
+        if (index > -1) {
+          upvoters.splice(index, 1);
+        }
+      } else {
+        upvoters.push(userId);
+      }
+    } else {
+      if (upvoters.includes(userId)) {
+        const index = upvoters.indexOf(userId);
+        if (index > -1) {
+          upvoters.splice(index, 1);
+        }
+      }
+      if (downvoters.includes(userId)) {
+        const index = downvoters.indexOf(userId);
+        if (index > -1) {
+          downvoters.splice(index, 1);
+        }
+      } else {
+        downvoters.push(userId);
+      }
+    }
+    change = { downvotes: downvoters, upvotes: upvoters };
+    await reply.findByIdAndUpdate(replyId, change);
+    res.status(200).json({
+      status: 'success',
+    });
+  } catch (err) {
+    res.status(400).send();
+  }
+};
+
 const deleteReply = async (req, res) => {
   try {
     const replyId = req.params.replyId.trim();
@@ -62,4 +118,10 @@ const deleteReply = async (req, res) => {
     res.status(400).send();
   }
 };
-module.exports = { getReplies, createReply, toggleBlackListReply, deleteReply };
+module.exports = {
+  getReplies,
+  createReply,
+  toggleBlackListReply,
+  vote,
+  deleteReply,
+};

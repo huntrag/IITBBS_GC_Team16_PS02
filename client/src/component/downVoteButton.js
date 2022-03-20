@@ -3,7 +3,7 @@ import { Button, Icon, Label, Popup } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import axiosInstance from "../util/axiosInstance";
 
-function DownvoteButton({likeCount, postId, downvotes, userId, replyId }) {
+function DownvoteButton({likeCount, postId, downvotes, userId, replyId ,onSubmit}) {
   const [downVote, setdownVote] = useState(false);
   useEffect(() => {
     if (downvotes && downvotes.findIndex((upId) => upId === userId) !== -1)
@@ -28,6 +28,7 @@ function DownvoteButton({likeCount, postId, downvotes, userId, replyId }) {
       ? `${process.env.REACT_APP_BACKEND_HOST}/reply/vote`
       : `${process.env.REACT_APP_BACKEND_HOST}/post/vote`;
     await axiosInstance.patch(API_URL, body);
+    onSubmit();
 }
 
   const devoteButton = userId ? (

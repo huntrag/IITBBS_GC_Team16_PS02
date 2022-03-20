@@ -85,7 +85,6 @@ const vote = async (req, res) => {
     const postId = req.body.postId;
     const userId = req.body.userId;
     // const userId = req.user._id
-    console.log(up);
     const post = await postModel.findById(postId);
     let downvoters = post.downvotes;
     let upvoters = post.upvotes;

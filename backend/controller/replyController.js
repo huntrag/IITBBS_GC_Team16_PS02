@@ -62,7 +62,6 @@ const vote = async (req, res) => {
     const replyId = req.body.replyId;
     const userId = req.body.userId;
     // const userId = req.user._id;
-    console.log(up);
     const rep = await reply.findById(replyId);
     let downvoters = rep.downvotes;
     let upvoters = rep.upvotes;

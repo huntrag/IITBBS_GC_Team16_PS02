@@ -8,7 +8,7 @@ module.exports = {
     else return next();
   },
   isAdmin: (req, res, next) => {
-    if (req.session.isAdmin && req.useer.role === "admin") return next();
+    if (req.session.isAdmin && req.user.role === "admin") return next();
     else res.redirect("/");
   },
 };

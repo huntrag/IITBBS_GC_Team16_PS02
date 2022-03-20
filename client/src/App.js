@@ -1,17 +1,17 @@
-import { useContext } from "react";
+import { useContext } from 'react';
 import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate
-} from "react-router-dom";
-import { Container } from "semantic-ui-react";
-import "./App.css";
-import MenuBar from "./component/menuBar";
-import { AuthContext } from "./context/auth";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import PostDetails from "./pages/PostDetails";
+  Navigate,
+} from 'react-router-dom';
+import { Container } from 'semantic-ui-react';
+import './App.css';
+import MenuBar from './component/menuBar';
+import { AuthContext } from './context/auth';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import PostDetails from './pages/PostDetails';
 
 function App() {
   const { user } = useContext(AuthContext);

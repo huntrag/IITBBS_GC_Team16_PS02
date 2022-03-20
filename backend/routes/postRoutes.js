@@ -1,20 +1,26 @@
-const express = require("express");
-const post = require("../model/Posts");
+const express = require('express');
+const post = require('../model/Posts');
 const router = new express.Router();
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const {
   getAllPost,
+  getPost,
   createPost,
+  vote,
   toggleBlackListPost,
   deletePost,
-} = require("../controller/postController");
-const { ensureAuth } = require("../middleware/auth");
+} = require('../controller/postController');
+const { /*ensureAuth,*/ isAdmin } = require('../middleware/auth');
 
-router.get("/", getAllPost);
+router.get('/', /*ensureAuth,*/ getAllPost);
 
-router.post("/", ensureAuth, createPost);
+router.get('/:postId', /*ensureAuth,*/ getPost);
 
-router.patch("/blackList", ensureAuth, toggleBlackListPost);
+router.post('/', /*ensureAuth,*/ createPost);
 
-router.delete("/:postId", ensureAuth, deletePost);
+router.patch('/blackList', /*ensureAuth, isAdmin,*/ toggleBlackListPost);
+
+router.patch('/vote', vote);
+
+router.delete('/:postId', /*ensureAuth,*/ deletePost);
 module.exports = router;

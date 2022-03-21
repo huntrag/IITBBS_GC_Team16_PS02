@@ -4,10 +4,10 @@ const router = new express.Router();
 const mongoose = require("mongoose");
 const { ensureAuth } = require("../middleware/auth");
 
-router.get("/search",ensureAuth,async (req, res) => {
+router.get("/",ensureAuth,async (req, res) => {
     try {
       let sortby = { updatedAt: -1 };
-      let searchkey=req.query.serachkey.trim().replace('+',' ');
+      let searchkey=req.query.searchkey.trim().replace('+',' ');
       //query string should not have spaces,replace spaces with + while calling from frontend.
       let showBlacklist = { blacklist: "false" };
       if (req.session.isAdmin) showBlacklist = {};

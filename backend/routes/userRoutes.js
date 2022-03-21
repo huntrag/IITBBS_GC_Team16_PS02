@@ -10,9 +10,9 @@ router.patch("/blacklist", ensureAuth, isAdmin, async (req, res) => {
     const userid = req.body.userId;
     const change = { blackList: !req.body.blacklist };
     await user.findByIdAndUpdate(userid, change);
-    await post.updateMany({ userid: userid }, change);
+    await post.updateMany({ userid: userid }, { blacklist: !req.body.blacklist});
     await reply.updateMany({ userid: userid }, change);
-    res.send("OK");
+    res.status(200).send();
   } catch (e) {
     res.status(400).send();
   }

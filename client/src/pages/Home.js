@@ -4,9 +4,13 @@ import PostCard from "../component/PostCard";
 import { AuthContext } from "../context/auth";
 import AddPost from "../component/AddPost";
 import axiosInstance from "../util/axiosInstance";
+import { useSearchParams } from "react-router-dom";
 
 function Home() {
   const authCtx = useContext(AuthContext);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchkey = searchParams.get("searchkey");
+  // console.log("search from home",searchParams.get("searchkey"));
   const [posts, setPosts] = useState([]);
   const { user } = authCtx;
 
@@ -30,8 +34,19 @@ function Home() {
       // if (!response.data.error) authCtx.login({ token: response.data.token });
       // else authCtx.logout();
     };
-    getAllPosts();
+    if (!searchkey) getAllPosts();
   });
+
+  useEffect(() => {
+    const getSearchPost = async () => {
+      const response = await axiosInstance.get(
+        `${process.env.REACT_APP_BACKEND_HOST}/search`,
+        { params: { searchkey } }
+      );
+      setPosts(response.data);
+    };
+    if (searchkey) getSearchPost();
+  }, [searchkey]);
 
   const deletePostHandler = (postId) => {
     const filterPost = posts.filter(
@@ -42,7 +57,14 @@ function Home() {
   return (
     <Grid columns={2}>
       <Grid.Row className="page-title">
-        <h1>Recent Posts</h1>
+        {searchkey ? (
+          <h1>
+            Posts which contains{" "}
+            <strong style={{ color: "#00b5ad" }}>{searchkey}</strong>
+          </h1>
+        ) : (
+          <h1>Recent Posts</h1>
+        )}
         {!user && (
           <div className="ui yellow mini message">
             You have to login for accessing posts
@@ -50,7 +72,7 @@ function Home() {
         )}
       </Grid.Row>
       <Grid.Row>
-        {user && (
+        {user && !searchkey && (
           <Grid.Column>
             <AddPost />
           </Grid.Column>

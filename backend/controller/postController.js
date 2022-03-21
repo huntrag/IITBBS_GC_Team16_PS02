@@ -24,7 +24,7 @@ const getOnePost = async (req, res) => {
   try {
     const postId = req.params.postId;
     let sortby = { upvotes: -1 };
-    let showBlacklist = { blacklist: 'false' };
+    let showBlacklist = { blackList: 'false' };
     if (req.session.isAdmin) showBlacklist = {};
     const post = await postModel.findById(postId).populate('userid');
     const replies = await replyModel

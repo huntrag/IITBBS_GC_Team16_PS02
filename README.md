@@ -4,7 +4,7 @@ Members of the team:
 
 - Satyansh Shukla
 - Ritik Gupta
-- Raghav GadeS
+- Raghav Gade
 
 ## Getting Started
 

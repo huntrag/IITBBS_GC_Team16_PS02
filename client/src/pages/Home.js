@@ -5,11 +5,13 @@ import { AuthContext } from "../context/auth";
 import AddPost from "../component/AddPost";
 import axiosInstance from "../util/axiosInstance";
 import { useSearchParams } from "react-router-dom";
+import SortButton from "../component/SortButton";
 
 function Home() {
   const authCtx = useContext(AuthContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchkey = searchParams.get("searchkey");
+  const sort = searchParams.get("sort");
   // console.log("search from home",searchParams.get("searchkey"));
   const [posts, setPosts] = useState([]);
   const { user } = authCtx;
@@ -26,16 +28,15 @@ function Home() {
   }, [authCtx]);
 
   useEffect(() => {
-    const getAllPosts = async () => {
+    const getAllBySortPosts = async () => {
       const response = await axiosInstance.get(
-        `${process.env.REACT_APP_BACKEND_HOST}/post`
+        `${process.env.REACT_APP_BACKEND_HOST}/post`,
+        { params: { sort } }
       );
       setPosts(response.data);
-      // if (!response.data.error) authCtx.login({ token: response.data.token });
-      // else authCtx.logout();
     };
-    if (!searchkey) getAllPosts();
-  });
+    if (sort) getAllBySortPosts();
+  }, [sort]);
 
   useEffect(() => {
     const getSearchPost = async () => {
@@ -46,7 +47,14 @@ function Home() {
       setPosts(response.data);
     };
     if (searchkey) getSearchPost();
-  }, [searchkey]);
+    const getAllPosts = async () => {
+      const response = await axiosInstance.get(
+        `${process.env.REACT_APP_BACKEND_HOST}/post`
+      );
+      setPosts(response.data);
+    };
+    if (!searchkey&&!sort) getAllPosts();
+  }, [searchkey,sort]);
 
   const deletePostHandler = (postId) => {
     const filterPost = posts.filter(
@@ -71,6 +79,7 @@ function Home() {
           </div>
         )}
       </Grid.Row>
+        <SortButton/>
       <Grid.Row>
         {user && !searchkey && (
           <Grid.Column>

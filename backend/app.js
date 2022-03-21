@@ -64,7 +64,7 @@ app.use(
       mongoUrl: process.env.MONGO_URL,
     }),
     cookie: {
-      maxAge: 60 * 60 * 1000,
+      maxAge: 10*60 * 60 * 1000,
       secure: false,
     },
   })

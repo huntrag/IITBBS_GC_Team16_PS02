@@ -6,16 +6,17 @@ const getAllPost = async (req, res) => {
   try {
     //?sort=hot
     let sortby = { createdAt: -1 };
-    if (req.query.sort == 'hot') sortby = { noUpvotes: 1, noDownvotes: -1 };
+    if (req.query.sort == 'hot') sortby = { noupvotes: -1};
     let showBlacklist = { blacklist: 'false' };
     if (req.session.isAdmin) showBlacklist = {};
     const posts = await postModel
-      .find(showBlacklist)
-      .sort(sortby)
-      .populate('userid')
-      .exec();
+    .find(showBlacklist)
+    .sort(sortby)
+    .populate('userid')
+    .exec();
     res.status(200).json(posts);
   } catch (err) {
+    console.log(err);
     res.status(500).send();
   }
 };
@@ -46,6 +47,7 @@ const createPost = async (req, res) => {
     await newPost.save();
     res.status(201).send();
   } catch (err) {
+    console.log(err);
     res.status(500).send();
   }
 };
@@ -86,7 +88,6 @@ const vote = async (req, res) => {
     // const userId = req.user._id
     try {
       const post = await postModel.findById(postId);
-      console.log(post);
       let downvoters = post.downvotes;
       let upvoters = post.upvotes;
       if (up) {
@@ -120,7 +121,7 @@ const vote = async (req, res) => {
           downvoters.push(userId);
         }
       }
-      change = { downvotes: downvoters, upvotes: upvoters };
+      change = { downvotes: downvoters, upvotes: upvoters,noupvotes:upvoters.length };
       await postModel.findByIdAndUpdate(postId, change);
       res.status(200).json({
         status: 'success',
